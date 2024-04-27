@@ -1,0 +1,43 @@
+CREATE TABLE IF NOT EXISTS usuarios (
+  idUsuario SERIAL PRIMARY KEY,
+  nombreApellido VARCHAR(50) NOT NULL,
+  email VARCHAR(100) NOT NULL,
+  telefono VARCHAR(20) NOT NULL,
+  fechaNacimiento DATE NOT NULL,
+  contrasenia VARCHAR(250) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS mascotas (
+  idMascota SERIAL PRIMARY KEY,
+  urlFoto VARCHAR(250) NOT NULL,
+  nombre VARCHAR(45) NOT NULL,
+  fechaNacimiento DATE NOT NULL,
+  especie VARCHAR(45) CHECK (especie IN ('CANINO', 'FELINO')) NOT NULL,
+  sexo BOOLEAN NOT NULL,
+  raza VARCHAR(45) NOT NULL,
+  color_pelo VARCHAR(45) NOT NULL,
+  pesoKg DOUBLE PRECISION NOT NULL,
+  isEsterilizado BOOLEAN NOT NULL,
+  domicilio VARCHAR(100) NOT NULL,
+  observaciones VARCHAR(250) NOT NULL,
+  idUsuario INT NOT NULL,
+  FOREIGN KEY (idUsuario) REFERENCES usuarios (idUsuario) ON DELETE NO ACTION ON UPDATE NO ACTION
+);
+
+CREATE TABLE IF NOT EXISTS vacunas (
+  idVacuna SERIAL PRIMARY KEY,
+  nombre VARCHAR(45) NOT NULL,
+  marca VARCHAR(45) NOT NULL,
+  tipoVacuna VARCHAR(45) CHECK (tipoVacuna IN ('DESPARASITARIA', 'ANTIRRABICA', 'ESPECIE')) NOT NULL,
+  fechaColocacion DATE NOT NULL,
+  fechaProximaDosis DATE NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS carnets_vacunas (
+  idVacuna INT NOT NULL,
+  idMascota INT NOT NULL,
+  isCompleto BOOLEAN,
+  PRIMARY KEY (idVacuna, idMascota),
+  FOREIGN KEY (idVacuna) REFERENCES vacunas (idVacuna) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  FOREIGN KEY (idMascota) REFERENCES mascotas (idMascota) ON DELETE NO ACTION ON UPDATE NO ACTION
+);
